@@ -5,8 +5,9 @@ import '../styles/ListNFTWithPermit.css'; // Import CSS file for styling
 
 
 function ListNFTWithPermit({ listNFTData, setListNFTData }) {
-  const { web3, account, marketplaceContract, nftContract, marketplaceAddress, nftContractAddress } = useWeb3(); // Destructure variables from the Web3 context
-
+   
+  const { web3, account, marketplaceContract,nftContract, marketplaceAddress, nftContractAddress } = useWeb3(); // Destructure variables from the Web3 context
+  //const nftContract = new web3.eth.Contract(abi, nftContractAddress);
   const getTimestampInSeconds = () => {
     // returns current timestamp in seconds
     return Math.floor(Date.now() / 1000);
@@ -17,10 +18,14 @@ function ListNFTWithPermit({ listNFTData, setListNFTData }) {
         console.log(account, marketplaceAddress, nftContractAddress)
       const priceInWei = web3.utils.toWei(listNFTData.price, 'ether');
       const deadline = getTimestampInSeconds() + 84200;
-      const nonces = await nftContract.methods.nonces(account).call();
-
+      if (!nftContract) {
+        throw new Error("NFT contract not initialized.");
+    }
+    console.log(nftContract.methods.nonces(account).call());
+      const nonces = nftContract.methods.nonces(account).call();
+      console.log(nonces);
       console.log(Number(nonces.toString()));
-
+      console.log("NAN");
       // Prepare the message data for signing
       const msgData = JSON.stringify({
         types: {
@@ -49,11 +54,11 @@ function ListNFTWithPermit({ listNFTData, setListNFTData }) {
           owner: account,
           spender: marketplaceAddress,
           value: listNFTData.amount,
-          nonce: Number(nonces.toString()), //you will get once you import the erc20permit contract
+          nonce: 10000010, //you will get once you import the erc20permit contract
           deadline: deadline // future timestamp
         }
       });
-
+      console.log("Ameer");
       // Sign the message data
       const signature = await new Promise((resolve, reject) => {
         web3.currentProvider.sendAsync(
@@ -71,12 +76,12 @@ function ListNFTWithPermit({ listNFTData, setListNFTData }) {
           }
         );
       });
-
+      console.log("Ameer");
       // Extract r, s, and v components from the signature
       const { r, s, v } = await ethers.utils.splitSignature(signature);
 
       console.log(r, s, v);
-
+      console.log(v);
       // Call permit function with the signature components
       await marketplaceContract.methods.listItemWithPermit(nftContractAddress, account, marketplaceAddress, listNFTData.amount, deadline, priceInWei, v, r, s).send();
 

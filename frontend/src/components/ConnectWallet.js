@@ -16,9 +16,9 @@ function ConnectWallet({ children }) {
   const [account, setAccount] = useState(null);
   const [marketplaceContract, setMarketplaceContract] = useState(null);
 
-  const marketplaceAddress = "YOUR_MARKETPLACE_ADDRESS";
-  const nftContractAddress = "YOUR_NFT_CONTRACT_ADDRESS";
-
+  const marketplaceAddress = "0xAbEcABEA738153a81Cafa2e5eaa7E62d6798D6E9";
+  const nftContractAddress = "0xF059eed325f1D089b4546368526660a107F321Cb";
+  
   useEffect(() => {
     if (window.ethereum) {
       const web3Instance = new Web3(window.ethereum);
@@ -29,7 +29,7 @@ function ConnectWallet({ children }) {
   const connectWallet = async () => {
     if (web3) {
       try {
-        const accounts = await web3.eth.getAccounts();
+        const accounts = await web3.eth.requestAccounts();
         const account = accounts[0];
         console.log(account);
         const marketplaceContract = new web3.eth.Contract(

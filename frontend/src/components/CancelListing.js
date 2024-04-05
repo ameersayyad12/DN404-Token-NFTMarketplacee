@@ -5,6 +5,7 @@ function CancelListing({ cancelListingData, setCancelListingData, marketplaceCon
   const cancelListing = async () => {
     try {
       await marketplaceContract.methods.cancelListing(cancelListingData.nftAddress);
+      console.log("NFT cancelled");
     } catch (error) {
       console.error(error);
     }

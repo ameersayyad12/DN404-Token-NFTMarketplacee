@@ -11,10 +11,13 @@ function BuyNFT({ buyNFTData, setBuyNFTData, account, marketplaceContract, web3 
       .send({ 
         from: account,
         value: web3.utils.toWei(buyNFTData.price, 'ether') 
-    });
+        
+    })  ;
+    
     } catch (error) {
       console.error(error);
     }
+    console.log("NFT bought");
   };
 
   return (
